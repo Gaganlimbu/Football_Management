@@ -1,0 +1,120 @@
+<!-- compare_players.html -->
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+{% if error_message %}
+<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+    <p class="font-bold">Error</p>
+    <p>{{ error_message }}</p>
+</div>
+{% endif %}
+
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">Player Comparison</h2>       
+
+    <!-- Player Comparison Table -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg mb-8">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Position</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Team</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Goals</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Assists</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Matches</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for player in players %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <a href="{% url 'player_detail' player.id %}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline">{{ player.name }}</a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-600">{{ player.position }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-600">{{ player.team }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-600 font-semibold">{{ player.goals }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-600 font-semibold">{{ player.assists }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-600">{{ player.matches_played }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No players found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Comparison Chart -->
+    <div class="bg-white p-6 shadow-md rounded-lg">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Performance Comparison</h3>
+        <div class="chart-container" style="position: relative; height:400px; width:100%">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const comparisonChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ names|safe }},
+            datasets: [
+                {
+                    label: 'Goals',
+                    data: {{ goals|safe }},
+                    backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Assists',
+                    data: {{ assists|safe }},
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Matches Played',
+                    data: {{ matches|safe }},
+                    backgroundColor: 'rgba(249, 115, 22, 0.7)',
+                    borderColor: 'rgba(249, 115, 22, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false,
+                        color: "rgba(229, 231, 235, 0.5)"
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 20
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

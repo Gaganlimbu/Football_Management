@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+    <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">{{ player.name }} - Stats</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+      <div class="flex flex-col">
+        <p class="font-medium text-gray-700">Team: <span class="text-blue-600">{{ player.team }}</span></p>
+        <p class="font-medium text-gray-700">Position: <span class="text-blue-600">{{ player.position }}</span></p>
+        <p class="font-medium text-gray-700">Goals: <span class="text-blue-600">{{ player.goals }}</span></p>
+        <p class="font-medium text-gray-700">Assists: <span class="text-blue-600">{{ player.assists }}</span></p>
+        <p class="font-medium text-gray-700">Matches Played: <span class="text-blue-600">{{ player.matches_played }}</span></p>
+      </div>
+      
+      <!-- Add any additional player info or visual elements if needed -->
+    </div>
+
+    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+      <h3 class="text-xl font-semibold text-center text-gray-800 mb-4">Player Performance Breakdown</h3>
+      <canvas id="statsChart" width="400" height="200"></canvas>
+    </div>
+    
+  </div>
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('statsChart').getContext('2d');
+    const statsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Goals', 'Assists', 'Matches'],
+            datasets: [{
+                label: '{{ player.name }} Stats',
+                data: [{{ player.goals }}, {{ player.assists }}, {{ player.matches_played }}],
+                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Player Performance Breakdown' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+  </script>
+{% endblock %}

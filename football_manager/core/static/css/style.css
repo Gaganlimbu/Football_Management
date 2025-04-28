@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;  /* Default font */
+}
+
+nav {
+    background-color: #333; /* Dark background for navbar */
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin-right: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #4CAF50; /* Adding a background hover effect */
+    text-decoration: underline;
+}
+
+/* Optional: Add responsive design for smaller screens */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav li {
+        margin-bottom: 10px;
+    }
+}

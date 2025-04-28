@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mt-8">
+        <h2 class="text-2xl font-semibold text-center mb-6">Add Player</h2>
+
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <div class="space-y-2">
+                <label for="name" class="block text-gray-700">Player Name</label>
+                <input type="text" name="name" id="name" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.name.value }}">
+            </div>
+
+            <div class="space-y-2">
+                <label for="position" class="block text-gray-700">Position</label>
+                <input type="text" name="position" id="position" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.position.value }}">
+            </div>
+
+            <div class="space-y-2">
+                <label for="team" class="block text-gray-700">Team</label>
+                <input type="text" name="team" id="team" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.team.value }}">
+            </div>
+
+            <div class="space-y-2">
+                <label for="goals" class="block text-gray-700">Goals</label>
+                <input type="text" name="goals" id="goals" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.goals.value }}">
+            </div>
+
+            <div class="space-y-2">
+                <label for="assists" class="block text-gray-700">Assists</label>
+                <input type="text" name="assists" id="assists" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.assists.value }}">
+            </div>
+
+            <div class="space-y-2">
+                <label for="matches_played" class="block text-gray-700">Matches Played</label>
+                <input type="text" name="matches_played" id="matches_played" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.matches_played.value }}">
+            </div>
+
+            <div class="mt-6 text-center">
+                <button type="submit" class="bg-blue-600 text-white py-2 px-6 rounded-full hover:bg-blue-500 transition-colors duration-300">
+                    Add Player
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
