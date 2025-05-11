@@ -200,45 +200,57 @@ def compare_players(request):
 
     return render(request, 'core/compare_players.html', context)
 
-def product_list(request):
-    category = request.GET.get('category', 'all')
-    
-    if category == 'all':
-        products = Product.objects.all()
-    else:
-        products = Product.objects.filter(category=category)
-    
-    return render(request, 'core/product_list.html', {
-        'products': products,
-        'active_category': category
-    })
-
-def search_view(request):
-    query = request.GET.get('query', '')
-    if query:
-        # Filter products based on the query (search term)
-        products = Product.objects.filter(name__icontains=query)
-    else:
-        # If no query, show all products
-        products = Product.objects.all()
-
-    return render(request, 'your_template_name.html', {'products': products, 'query': query})
-
-def shop_view(request):
-    query = request.GET.get('q', '')
-    category = request.GET.get('category', 'all')
+def shop(request):
+    search_query = request.GET.get('q', '')
+    category_filter = request.GET.get('category', '')
 
     products = Product.objects.all()
 
-    if query:
-        products = products.filter(name__icontains=query)
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+
+    if category_filter:
+        products = products.filter(category=category_filter)
+
+    category_choices = {
+        'featured': 'Featured',
+        'sale': 'On Sale',
+        'new': 'New Arrivals',
+        'bestseller': 'Bestsellers',
+    }
+
+    context = {
+        'products': products,
+        'search_query': search_query,
+        'category': category_filter,
+        'category_choices': category_choices,
+    }
+    return render(request, 'core/shop.html', context)
+
+def product_list(request):
+    category = request.GET.get('category', 'all')
+    query = request.GET.get('q', '')
+
+    products = Product.objects.all()
 
     if category != 'all':
         products = products.filter(category=category)
 
-    context = {
+    if query:
+        products = products.filter(name__icontains=query)
+
+    return render(request, 'core/shop.html', {
         'products': products,
         'category': category,
-        'categories': CATEGORIES,
-    }
-    return render(request, 'core/shop.html', context)
+        'query': query,
+    })
+
+def search_view(request):
+    query = request.GET.get('q', '')
+    products = Product.objects.filter(name__icontains=query) if query else Product.objects.all()
+    
+    return render(request, 'core/shop.html', {
+        'products': products,
+        'query': query,
+        'category': 'all',
+    })

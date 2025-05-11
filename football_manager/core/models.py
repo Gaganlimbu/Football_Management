@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Player(models.Model):
     name = models.CharField(max_length=100)
@@ -23,21 +24,18 @@ class MatchPerformance(models.Model):
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
-        ('all', 'All Products'),
         ('featured', 'Featured'),
         ('sale', 'On Sale'),
         ('new', 'New Arrivals'),
         ('bestseller', 'Bestsellers'),
     ]
-    
+
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    old_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    image_url = models.URLField()
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='all')
-    
+    image = models.ImageField(upload_to='products/')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='featured')
+
     def __str__(self):
         return self.name
-
 

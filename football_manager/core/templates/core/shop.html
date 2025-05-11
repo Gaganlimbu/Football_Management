@@ -1,52 +1,69 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-center mb-6">Discover Amazing Products</h1>
-  <p class="text-center text-gray-600 mb-8">
-    Shop the latest collection of premium products at unbeatable prices.
-  </p>
+<div style="margin: 0 auto; padding: 3rem 1rem; max-width: 56rem;">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <h1 style="font-size: 1.875rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem;">Explore Our Collection</h1>
+    <p style="font-size: 1rem; color: #4b5563;">Premium Quality, Exceptional Value</p>
+  </div>
 
-  <!-- Search Bar -->
-  <form method="get" class="mb-6 flex justify-center">
-    <input
-      type="text"
-      name="q"
-      placeholder="Search for products..."
-      value="{{ request.GET.q }}"
-      class="w-1/2 px-4 py-2 border border-gray-300 rounded-l"
-    />
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r">
-      Search
-    </button>
+  <!-- Search Form -->
+  <form method="get" action="{% url 'shop' %}" style="max-width: 36rem; margin: 0 auto 2.5rem;">
+    <div style="display: flex; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+      <input type="text" 
+             name="q" 
+             placeholder="Search products..." 
+             value="{{ search_query }}"
+             style="width: 100%; padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-right: 0; border-radius: 0.375rem 0 0 0.375rem; font-size: 0.875rem; line-height: 1.25rem; color: #1f2937; outline: none; box-shadow: 0 0 0 2px #e0e7ff;">
+      <button type="submit" style="padding: 0.5rem 1.25rem; background-color: #4f46e5; color: white; font-weight: 500; border-radius: 0 0.375rem 0.375rem 0; border: none; cursor: pointer; transition: background-color 0.2s;">
+        Search
+      </button>
+    </div>
   </form>
 
   <!-- Category Filters -->
-  <div class="flex justify-center space-x-4 mb-8">
-    {% for key, label in categories %}
-      <a href="?category={{ key }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
-         class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-200 {% if category == key %}bg-gray-300{% endif %}">
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-bottom: 2.5rem;">
+    {% for key, label in category_choices.items %}
+      <a href="?category={{ key }}{% if search_query %}&q={{ search_query }}{% endif %}"
+         style="padding: 0.25rem 1rem; font-size: 0.875rem; font-weight: 500; border: 1px solid; border-radius: 9999px; transition: all 0.2s; text-decoration: none; 
+                {% if category == key %}background-color: #e0e7ff; border-color: #c7d2fe; color: #4f46e5;{% else %}border-color: #e5e7eb; color: #4b5563;{% endif %}">
         {{ label }}
       </a>
     {% endfor %}
+    <a href="{% url 'shop' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+       style="padding: 0.25rem 1rem; font-size: 0.875rem; font-weight: 500; color: #6b7280; text-decoration: none;">
+      Clear
+    </a>
   </div>
 
   <!-- Product List -->
   {% if products %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div style="display: grid; gap: 1.25rem;">
       {% for product in products %}
-        <div class="border rounded-lg shadow p-4">
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded mb-4">
-          <h2 class="text-lg font-semibold">{{ product.name }}</h2>
-          <p class="text-gray-600">{{ product.description|truncatewords:15 }}</p>
-          <p class="mt-2 font-bold text-blue-600">${{ product.price }}</p>
+        <div style="display: flex; align-items: center; background-color: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: box-shadow 0.2s;">
+
+          <!-- Image -->
+          <div style="width: 80px; height: 80px; flex-shrink: 0; overflow: hidden; border-radius: 0.5rem; background-color: #f9fafb;">
+            <img src="{{ product.image.url }}"
+                 alt="{{ product.name }}"
+                 style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+
+          <!-- Product Details -->
+          <div style="margin-left: 1rem;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin-bottom: 0.25rem;">{{ product.name }}</h3>
+            <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 0.25rem; text-transform: capitalize;">{{ product.category }}</p>
+            <p style="font-size: 0.875rem; font-weight: 700; color: #4f46e5; margin-bottom: 0.25rem;">${{ product.price }}</p>
+            <p style="font-size: 0.75rem; color: #6b7280; line-height: 1.2;">{{ product.description|truncatewords:10 }}</p>
+          </div>
+
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <p class="text-center text-gray-500 mt-8">
-      No products found{% if request.GET.q %} for "{{ request.GET.q }}"{% endif %}.
-    </p>
+    <div style="text-align: center; padding: 5rem 0;">
+      <p style="color: #6b7280; font-size: 1.125rem;">No products found{% if search_query %} matching "{{ search_query }}"{% endif %}.</p>
+    </div>
   {% endif %}
 </div>
 {% endblock %}
